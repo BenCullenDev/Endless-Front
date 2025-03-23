@@ -96,7 +96,6 @@ async function checkLoginStatus() {
   }
   
   
-  
 
 let playerId = localStorage.getItem('playerId');
 if (!playerId) {
@@ -109,7 +108,7 @@ if (!playerId) {
 
 let player = {
     character_name: null,
-    level: 1, exp: 0, expToLevel: 50,
+    level: 1, exp: 0, expToLevel: 50, currentExp: 0,
     health: 100, maxHealth: 100,
     stamina: 100, maxStamina: 100,
     damage: 1, defense: 0, statPoints: 0,
@@ -245,10 +244,12 @@ let player = {
       .upsert({
         id: user.id,
         character_name: player.character_name, // Ensure correct naming
+        level: player.level, // Include level
         data: {
           ...player,
           damage: player.damage,
-          defense: player.defense
+          defense: player.defense,
+          currentExp: player.currentExp // Include currentExp
         }
       });
   
@@ -259,8 +260,6 @@ let player = {
       console.log('Game auto-saved:', new Date().toLocaleTimeString());
     }
   }
-  
-  
   
   async function loadGame() {
     const { data: { user } } = await supabaseClient.auth.getUser();
@@ -280,7 +279,7 @@ let player = {
       console.log('No player data found:', error);
       player = {
         character_name: null,
-        level: 1, exp: 0, expToLevel: 50,
+        level: 1, exp: 0, expToLevel: 50, currentExp: 0,
         health: 100, maxHealth: 100,
         stamina: 100, maxStamina: 100,
         damage: 1, defense: 0, statPoints: 0,
@@ -291,8 +290,10 @@ let player = {
     } else {
       player = data.data;
   
-      // Important: Make sure you assign character_name explicitly
+      // Important: Make sure you assign character_name and level explicitly
       player.character_name = data.character_name || null;
+      player.level = data.level || 1;
+      player.currentExp = data.currentExp || 0; // Load currentExp
   
       if (player.character_name) {
         document.getElementById('displayName').textContent = `Soldier: ${player.character_name}`;
