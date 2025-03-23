@@ -197,11 +197,15 @@ let player = {
     clearInterval(combatInterval);
     combatInterval = setInterval(combatRound, 6000);
     logCombat('🚀 Combat started!');
+    document.getElementById('startCombatButton').style.display = 'none'; // Hide start button
+    document.getElementById('stopCombatButton').style.display = 'block'; // Show stop button
   }
   
   function stopCombat() {
     clearInterval(combatInterval);
     logCombat('⏸️ Combat stopped.');
+    document.getElementById('startCombatButton').style.display = 'block'; // Show start button
+    document.getElementById('stopCombatButton').style.display = 'none'; // Hide stop button
   }
   
   function checkLevelUp() {
@@ -319,6 +323,8 @@ let player = {
     document.getElementById('arenaView').style.display = 'block';
     updateStats();
     logCombat('🏟️ Entered the Training Arena!');
+    document.getElementById('startCombatButton').style.display = combatInterval ? 'none' : 'block'; // Show/hide based on combat state
+    document.getElementById('stopCombatButton').style.display = combatInterval ? 'block' : 'none'; // Show/hide based on combat state
   }
   
   function goToHome() {
