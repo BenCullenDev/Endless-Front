@@ -125,7 +125,10 @@ let player = {
   }
   
   function updateStats() {
-    document.getElementById('displayName').textContent = player.character_name || 'Soldier';
+    const displayNameElement = document.getElementById('displayName');
+    if (displayNameElement) {
+        displayNameElement.textContent = player.character_name || 'Soldier';
+    }
     document.getElementById('level').textContent = player.level;
     document.getElementById('enemiesDefeated').textContent = player.enemiesDefeated;
     document.getElementById('health').textContent = player.health.toFixed(0);
