@@ -134,6 +134,7 @@ let player = {
     document.getElementById('defense').textContent = player.defense;
     document.getElementById('exp').textContent = player.exp;
     document.getElementById('expToLevel').textContent = player.expToLevel;
+    document.getElementById('statPoints').textContent = player.statPoints; // Display available stat points
   
     document.getElementById('healthBar').style.width = (player.health / player.maxHealth * 100) + '%';
     document.getElementById('staminaBar').style.width = (player.stamina / player.maxStamina * 100) + '%';
@@ -212,6 +213,7 @@ let player = {
       player.maxHealth += 10;
       player.health = player.maxHealth;
       logCombat(`🎖️ Leveled up to ${player.level}! +2 Stat points.`);
+      saveGame(); // Save game after leveling up
     }
   }
   
@@ -224,6 +226,7 @@ let player = {
     if (type === 'defense') player.defense += 0.25;
     player.statPoints--;
     updateStats();
+    saveGame(); // Save game after spending stat points
   }
   
   setInterval(() => {
@@ -249,7 +252,8 @@ let player = {
           ...player,
           damage: player.damage,
           defense: player.defense,
-          currentExp: player.currentExp // Include currentExp
+          currentExp: player.currentExp, // Include currentExp
+          statPoints: player.statPoints // Include statPoints
         }
       });
   
@@ -294,6 +298,7 @@ let player = {
       player.character_name = data.character_name || null;
       player.level = data.level || 1;
       player.currentExp = data.currentExp || 0; // Load currentExp
+      player.statPoints = data.statPoints || 0; // Load statPoints
   
       if (player.character_name) {
         document.getElementById('displayName').textContent = `Soldier: ${player.character_name}`;
