@@ -245,7 +245,11 @@ let player = {
       .upsert({
         id: user.id,
         character_name: player.character_name, // Ensure correct naming
-        data: player
+        data: {
+          ...player,
+          damage: player.damage,
+          defense: player.defense
+        }
       });
   
     if (error) {
@@ -316,8 +320,8 @@ let player = {
     document.getElementById('homeView').style.display = 'block';
     stopCombat();
   }
-  
-  
+
+
 
 
 
