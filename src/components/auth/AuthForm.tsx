@@ -1,18 +1,39 @@
+'use client'
+
 import { useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
+import { createClient } from '@/lib/supabase'
 
 export function AuthForm() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { signIn, signUp, error, loading } = useAuth()
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (isSignUp) {
-      await signUp(email, password)
-    } else {
-      await signIn(email, password)
+    setError(null)
+    setLoading(true)
+
+    try {
+      if (isSignUp) {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        })
+        if (error) throw error
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+        if (error) throw error
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An error occurred during authentication')
+    } finally {
+      setLoading(false)
     }
   }
 
