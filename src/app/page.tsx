@@ -33,8 +33,8 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-terminal-darker">
+        <div className="text-terminal-green text-xl shadow-[0_0_10px_var(--terminal-green)]">INITIALIZING SYSTEM...</div>
       </div>
     )
   }
@@ -44,20 +44,25 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Welcome, {user.email}
-          </h2>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-terminal-darker">
+      <main className="flex-1 flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-4xl bg-terminal-dark border border-terminal-green shadow-[0_0_10px_var(--terminal-green)] rounded-lg p-8">
+          <h1 className="text-4xl font-bold text-terminal-green mb-8 text-center">
+            WELCOME, USER {user.email}
+          </h1>
+          <div className="space-y-4">
+            <p className="text-terminal-green text-center">
+              SYSTEM READY FOR COMMANDS
+            </p>
+            <button
+              onClick={handleSignOut}
+              className="w-full bg-transparent border border-terminal-green text-terminal-green px-4 py-2 rounded hover:bg-terminal-green hover:text-terminal-darker transition-all duration-200 shadow-[0_0_10px_var(--terminal-green)]"
+            >
+              TERMINATE SESSION
+            </button>
+          </div>
         </div>
-        <button
-          onClick={handleSignOut}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Sign out
-        </button>
-      </div>
+      </main>
     </div>
   )
 }

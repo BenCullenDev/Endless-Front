@@ -38,15 +38,15 @@ export function AuthForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-terminal-darker py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 border border-terminal-green shadow-[0_0_10px_var(--terminal-green)] p-8 rounded-lg">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {isSignUp ? 'Create your account' : 'Sign in to your account'}
+          <h2 className="text-center text-3xl font-extrabold text-terminal-green">
+            {isSignUp ? 'INITIALIZE NEW USER PROTOCOL' : 'AUTHORIZATION REQUIRED'}
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md space-y-4">
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
@@ -57,8 +57,8 @@ export function AuthForm() {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                className="w-full bg-terminal-dark border border-terminal-green text-terminal-green px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-terminal-green placeholder-terminal-green/50"
+                placeholder="ENTER USER IDENTIFIER"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -73,8 +73,8 @@ export function AuthForm() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                className="w-full bg-terminal-dark border border-terminal-green text-terminal-green px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-terminal-green placeholder-terminal-green/50"
+                placeholder="ENTER ACCESS CODE"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -82,16 +82,16 @@ export function AuthForm() {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+            <div className="text-red-500 text-sm text-center shadow-[0_0_10px_var(--terminal-green)]">{error}</div>
           )}
 
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full bg-transparent border border-terminal-green text-terminal-green px-4 py-2 rounded hover:bg-terminal-green hover:text-terminal-darker transition-all duration-200 shadow-[0_0_10px_var(--terminal-green)]"
             >
-              {loading ? 'Loading...' : isSignUp ? 'Sign up' : 'Sign in'}
+              {loading ? 'PROCESSING...' : isSignUp ? 'INITIALIZE USER' : 'AUTHORIZE ACCESS'}
             </button>
           </div>
         </form>
@@ -99,11 +99,11 @@ export function AuthForm() {
         <div className="text-center">
           <button
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-indigo-600 hover:text-indigo-500"
+            className="text-terminal-green hover:text-terminal-green/80 transition-colors"
           >
             {isSignUp
-              ? 'Already have an account? Sign in'
-              : "Don't have an account? Sign up"}
+              ? 'EXISTING USER? AUTHORIZE ACCESS'
+              : 'NEW USER? INITIALIZE PROTOCOL'}
           </button>
         </div>
       </div>
