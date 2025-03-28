@@ -1,0 +1,9 @@
+[build]
+command = "npm run build"
+cwd = "."
+
+[site]
+bucket = ".vercel/output/static"
+
+[compatibility_flags]
+nodejs_compat = true 
