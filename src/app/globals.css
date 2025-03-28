@@ -2,34 +2,129 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --terminal-green: #00ff00;
-  --terminal-dark: #001100;
-  --terminal-darker: #000800;
+@layer base {
+  html, body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #000000;
+    color: #4AF626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-body {
-  background-color: var(--terminal-darker);
-  color: var(--terminal-green);
-  font-family: 'Courier New', monospace;
-  text-shadow: 0 0 5px var(--terminal-green);
-}
+@layer components {
+  .terminal-button {
+    background-color: black;
+    color: #4AF626;
+    border: 2px solid #4AF626;
+    font-family: 'Courier New', monospace;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    width: 100%;
+  }
 
-/* Add a subtle scanline effect */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15),
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 2px
-  );
-  pointer-events: none;
-  z-index: 1000;
+  .terminal-button:hover {
+    background-color: #4AF626;
+    color: black;
+  }
+
+  .terminal-button:active {
+    background-color: #2a8b17;
+    color: #4AF626;
+  }
+
+  .terminal-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .terminal-button.terminal-button-red {
+    color: #FF0000;
+    border-color: #FF0000;
+  }
+
+  .terminal-button.terminal-button-red:hover {
+    background-color: #FF0000;
+    color: black;
+  }
+
+  .terminal-button.terminal-button-red:active {
+    background-color: #990000;
+    color: #FF0000;
+  }
+
+  .terminal-input {
+    background-color: black;
+    color: #4AF626;
+    border: 2px solid #4AF626;
+    font-family: 'Courier New', monospace;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .terminal-input::placeholder {
+    color: #4AF626;
+    opacity: 0.5;
+  }
+
+  .terminal-input:focus {
+    outline: none;
+    box-shadow: 0 0 5px #4AF626;
+  }
+
+  .terminal-card {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 2px solid #4AF626;
+    box-shadow: 0 0 10px #4AF626;
+    padding: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    backdrop-filter: blur(10px);
+  }
+
+  .terminal-nav {
+    width: 240px;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-right: 2px solid #4AF626;
+    padding-top: 2rem;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+
+  .terminal-nav-link {
+    font-family: 'Courier New', monospace;
+    text-decoration: none;
+    color: #4AF626;
+    transition: all 0.2s ease;
+  }
+
+  .terminal-nav-link:hover {
+    background-color: rgba(74, 246, 38, 0.1);
+    box-shadow: 0 0 10px rgba(74, 246, 38, 0.2);
+  }
+
+  .terminal-nav-link-active {
+    background-color: #4AF626;
+    color: black;
+  }
+
+  .terminal-main {
+    margin-left: 240px;
+    padding: 2rem;
+    min-height: 100vh;
+    width: calc(100% - 240px);
+  }
 }

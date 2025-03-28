@@ -1,12 +1,8 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next()
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,17 +10,17 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         get(name: string) {
-          return request.cookies.get(name)?.value
+          return req.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          response.cookies.set({
+          res.cookies.set({
             name,
             value,
             ...options,
           })
         },
         remove(name: string, options: CookieOptions) {
-          response.cookies.set({
+          res.cookies.set({
             name,
             value: '',
             ...options,
@@ -34,20 +30,18 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  await supabase.auth.getSession()
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
-  return response
+  // If there's no session and the user is trying to access a protected route
+  if (!session && req.nextUrl.pathname.startsWith('/profile')) {
+    return NextResponse.redirect(new URL('/', req.url))
+  }
+
+  return res
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
-  ],
+  matcher: ['/profile/:path*'],
 } 

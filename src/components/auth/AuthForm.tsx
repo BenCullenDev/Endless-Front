@@ -1,80 +1,96 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/card'
 
 export function AuthForm() {
+  const router = useRouter()
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+    setSuccess(null)
     setLoading(true)
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
         })
-        if (error) throw error
+        
+        if (data?.user?.identities?.length === 0) {
+          setError('This email is already registered. Would you like to sign in instead?')
+          setIsSignUp(false)
+        } else if (error) {
+          throw error
+        } else if (data?.user) {
+          setSuccess('Account created! Please check your email for confirmation.')
+        }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error, data } = await supabase.auth.signInWithPassword({
           email,
           password,
         })
         if (error) throw error
+        if (data?.session) {
+          router.push('/')
+        }
       }
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred during authentication')
+      setError(error instanceof Error ? error.message : 'Authentication failed')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-terminal-darker py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 border border-terminal-green shadow-[0_0_10px_var(--terminal-green)] p-8 rounded-lg">
-        <div>
-          <h2 className="text-center text-3xl font-extrabold text-terminal-green">
-            {isSignUp ? 'INITIALIZE NEW USER PROTOCOL' : 'AUTHORIZATION REQUIRED'}
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md space-y-4">
+    <div className="min-h-screen w-full flex items-center justify-center p-4">
+      <Card className="max-w-md">
+        <h2 className="text-center text-2xl mb-8">
+          {isSignUp ? 'Create account' : 'Sign in'}
+        </h2>
+
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-6">
             <div>
-              <label htmlFor="email-address" className="sr-only">
+              <label htmlFor="email-address" className="block mb-2">
                 Email address
               </label>
-              <input
+              <Input
                 id="email-address"
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="w-full bg-terminal-dark border border-terminal-green text-terminal-green px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-terminal-green placeholder-terminal-green/50"
-                placeholder="ENTER USER IDENTIFIER"
+                placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="block mb-2">
                 Password
               </label>
-              <input
+              <Input
                 id="password"
                 name="password"
                 type="password"
                 autoComplete="current-password"
                 required
-                className="w-full bg-terminal-dark border border-terminal-green text-terminal-green px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-terminal-green placeholder-terminal-green/50"
-                placeholder="ENTER ACCESS CODE"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -82,31 +98,42 @@ export function AuthForm() {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center shadow-[0_0_10px_var(--terminal-green)]">{error}</div>
+            <div className="mt-6 text-red-500">
+              {error}
+            </div>
           )}
 
-          <div>
-            <button
+          {success && (
+            <div className="mt-6 text-[#4AF626]">
+              {success}
+            </div>
+          )}
+
+          <div className="mt-6 space-y-4">
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-transparent border border-terminal-green text-terminal-green px-4 py-2 rounded hover:bg-terminal-green hover:text-terminal-darker transition-all duration-200 shadow-[0_0_10px_var(--terminal-green)]"
+              className="w-full"
             >
-              {loading ? 'PROCESSING...' : isSignUp ? 'INITIALIZE USER' : 'AUTHORIZE ACCESS'}
-            </button>
+              {loading ? 'Processing...' : isSignUp ? 'Create account' : 'Sign in'}
+            </Button>
+
+            <Button
+              type="button"
+              onClick={() => {
+                setError(null)
+                setSuccess(null)
+                setIsSignUp(!isSignUp)
+              }}
+              className="w-full"
+            >
+              {isSignUp
+                ? 'Already have an account? Sign in'
+                : "Don't have an account? Sign up"}
+            </Button>
           </div>
         </form>
-
-        <div className="text-center">
-          <button
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-terminal-green hover:text-terminal-green/80 transition-colors"
-          >
-            {isSignUp
-              ? 'EXISTING USER? AUTHORIZE ACCESS'
-              : 'NEW USER? INITIALIZE PROTOCOL'}
-          </button>
-        </div>
-      </div>
+      </Card>
     </div>
   )
 } 

@@ -7,15 +7,7 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      colors: {
-        terminal: {
-          green: 'var(--terminal-green)',
-          dark: 'var(--terminal-dark)',
-          darker: 'var(--terminal-darker)',
-        },
-      },
-    },
+    extend: {},
   },
   plugins: [],
 }
