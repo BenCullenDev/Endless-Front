@@ -1,10 +1,14 @@
 import { createBrowserClient } from '@supabase/ssr'
+import { env } from '@/config/env'
 
 export const createClient = () => {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  return createBrowserClient(env.supabase.url, env.supabase.anonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  })
 }
 
 export type Database = {
